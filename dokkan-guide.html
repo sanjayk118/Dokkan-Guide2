@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dokkan Battle Unit Guide</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1A1A2E;
+      color: #FFF;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFD700;
+      font-size: 28px;
+      letter-spacing: 3px;
+      margin-top: 20px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #AAA;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .unit-count {
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      margin-bottom: 16px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      background: #16213E;
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 12px;
+      color: #FFF;
+      outline: none;
+      margin-bottom: 12px;
+    }
+    .search-input::placeholder { color: #888; }
+    .search-input:focus { border-color: #FFD700; }
+
+    /* Filters */
+    .filter-group {
+      margin-bottom: 10px;
+    }
+    .filter-group:last-child { margin-bottom: 16px; }
+    .filter-group-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+    .filter-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: #16213E;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #AAA;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: #FFD700; color: #FFF; }
+    .filter-btn.active { background: #FFD700; color: #1A1A2E; border-color: #FFD700; }
+    .filter-btn.active-INT { background: #9C27B0; color: #FFF; border-color: #9C27B0; }
+    .filter-btn.active-AGL { background: #2196F3; color: #FFF; border-color: #2196F3; }
+    .filter-btn.active-TEQ { background: #4CAF50; color: #FFF; border-color: #4CAF50; }
+    .filter-btn.active-STR { background: #F44336; color: #FFF; border-color: #F44336; }
+    .filter-btn.active-PHY { background: #FF9800; color: #FFF; border-color: #FF9800; }
+    .filter-btn.active-super { background: #1565C0; color: #FFF; border-color: #1565C0; }
+    .filter-btn.active-extreme { background: #C62828; color: #FFF; border-color: #C62828; }
+
+    .cat-select {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 13px;
+      background: #16213E;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #FFF;
+      outline: none;
+      cursor: pointer;
+    }
+    .cat-select:focus { border-color: #FFD700; }
+    .cat-select option { background: #16213E; color: #FFF; }
+
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .active-filter-tag {
+      background: #FFD70022;
+      border: 1px solid #FFD70066;
+      border-radius: 6px;
+      padding: 3px 8px;
+      font-size: 11px;
+      color: #FFD700;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .clear-filter {
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .clear-filter:hover { color: #FFF; }
+    .clear-all-btn {
+      background: none;
+      border: 1px solid #555;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: #888;
+      cursor: pointer;
+    }
+    .clear-all-btn:hover { border-color: #FFD700; color: #FFD700; }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      color: #FFD700;
+      margin-top: 60px;
+      font-size: 18px;
+    }
+    .loading-sub {
+      text-align: center;
+      color: #888;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+
+    /* ---- Unit Cards ---- */
+    .card {
+      background: #16213E;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid #FFD700;
+      cursor: pointer;
+      transition: transform 0.15s;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .card:hover { transform: scale(1.02); }
+
+    .card-thumb {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #0F3460;
+      flex-shrink: 0;
+      border: 2px solid #FFD70044;
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #FFF;
+    }
+    .badge-INT { background: #9C27B0; }
+    .badge-AGL { background: #2196F3; }
+    .badge-TEQ { background: #4CAF50; }
+    .badge-STR { background: #F44336; }
+    .badge-PHY { background: #FF9800; }
+    .badge-super { background: #1565C0; }
+    .badge-extreme { background: #C62828; }
+
+    .rarity {
+      color: #FFD700;
+      font-size: 13px;
+      font-weight: 700;
+      margin-left: auto;
+    }
+
+    .unit-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFF;
+    }
+    .unit-title {
+      font-size: 13px;
+      color: #CCC;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .slot-preview {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0F3460;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    .slot-preview .label { color: #FFD700; font-size: 12px; font-weight: 700; }
+    .slot-preview .value { color: #FFF; font-size: 12px; }
+
+    .empty { color: #888; text-align: center; margin-top: 40px; font-size: 16px; }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .page-btn {
+      background: #16213E;
+      border: 1px solid #FFD700;
+      border-radius: 8px;
+      padding: 8px 16px;
+      color: #FFD700;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .page-btn:disabled { opacity: 0.3; cursor: default; }
+    .page-info { color: #AAA; font-size: 13px; }
+
+    /* ---- Detail View ---- */
+    .detail-view { display: none; }
+    .detail-view.active { display: block; }
+    .list-view.hidden { display: none; }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: #FFD700;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 8px 0;
+      margin-bottom: 10px;
+    }
+    .back-btn:hover { text-decoration: underline; }
+
+    .detail-header {
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      margin-bottom: 10px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .detail-thumb {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: #0F3460;
+      flex-shrink: 0;
+      border: 2px solid #FFD700;
+    }
+    .detail-header-info { flex: 1; min-width: 0; }
+    .detail-header .unit-name { font-size: 24px; font-weight: 800; }
+
+    .section {
+      margin-top: 18px;
+      background: #16213E;
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #FFD700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .section-body {
+      color: #DDD;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .slot-box {
+      background: #0F3460;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #FFD700;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    /* Stat bars */
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .stat-label { color: #AAA; font-size: 13px; font-weight: 600; width: 36px; }
+    .stat-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: #0F3460;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .stat-bar-fill {
+      height: 100%;
+      background: #FFD700;
+      border-radius: 5px;
+    }
+    .stat-value { color: #FFF; font-size: 13px; font-weight: 600; width: 55px; text-align: right; }
+
+    .ki-label { color: #FFD700; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+    .condition { color: #FF9800; font-size: 13px; font-style: italic; margin-bottom: 6px; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      background: #0F3460;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #FFF;
+    }
+    .tag-cat { background: #1B4332; }
+
+    /* Passive bullet list */
+    .passive-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .passive-list li {
+      color: #DDD;
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 4px 0 4px 16px;
+      position: relative;
+      border-bottom: 1px solid #ffffff08;
+    }
+    .passive-list li:last-child { border-bottom: none; }
+    .passive-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #FFD700;
+    }
+
+    /* How to use guide */
+    .guide-section {
+      margin-top: 12px;
+    }
+    .guide-block {
+      background: #0F3460;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .guide-block:last-child { margin-bottom: 0; }
+    .guide-block-title {
+      color: #FFD700;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .guide-block-title .icon {
+      font-size: 14px;
+    }
+    .guide-block-body {
+      color: #DDD;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .guide-block-body strong {
+      color: #FFF;
+    }
+    .guide-highlight {
+      display: inline-block;
+      background: #FFD70022;
+      border: 1px solid #FFD70044;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: #FFD700;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>DOKKAN GUIDE</h1>
+    <p class="subtitle">Global Unit Database</p>
+    <p class="unit-count" id="unitCount">Loading...</p>
+
+    <!-- List View -->
+    <div class="list-view" id="listView">
+      <input
+        class="search-input"
+        id="searchInput"
+        type="text"
+        placeholder="Search by name, type, or category..."
+      />
+      <div id="activeFilters" class="active-filters"></div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Type</div>
+        <div class="filter-row" id="typeFilters">
+          <button class="filter-btn" data-group="type" data-value="AGL">AGL</button>
+          <button class="filter-btn" data-group="type" data-value="TEQ">TEQ</button>
+          <button class="filter-btn" data-group="type" data-value="INT">INT</button>
+          <button class="filter-btn" data-group="type" data-value="STR">STR</button>
+          <button class="filter-btn" data-group="type" data-value="PHY">PHY</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Rarity &amp; Class</div>
+        <div class="filter-row" id="rarityClassFilters">
+          <button class="filter-btn" data-group="rarity" data-value="LR">LR</button>
+          <button class="filter-btn" data-group="rarity" data-value="UR">UR</button>
+          <button class="filter-btn" data-group="class" data-value="Super">Super</button>
+          <button class="filter-btn" data-group="class" data-value="Extreme">Extreme</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Category</div>
+        <select class="cat-select" id="categoryFilter">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div id="unitList"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Detail View -->
+    <div class="detail-view" id="detailView">
+      <button class="back-btn" id="backBtn">&larr; Back to list</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+<script>
+// ---- State ----
+let allUnits = [];
+let currentPage = 1;
+const UNITS_PER_PAGE = 20;
+
+// Multi-filter state — each can be null (off) or a value
+let filters = {
+  type: null,      // "AGL", "TEQ", etc.
+  rarity: null,    // "LR", "UR"
+  class: null,     // "Super", "Extreme"
+  category: null,  // category string
+};
+
+// ---- Load JSON data ----
+async function loadData() {
+  try {
+    const resp = await fetch("dokkan-data.json");
+    const raw = await resp.json();
+    allUnits = raw.map(u => normalizeUnit(u));
+    document.getElementById("unitCount").textContent = allUnits.length + " units loaded";
+    buildCategoryDropdown();
+    renderList();
+  } catch (err) {
+    document.getElementById("unitCount").textContent = "Error loading data — make sure dokkan-data.json is in the same folder";
+    console.error(err);
+  }
+}
+
+// ---- Normalize the API data into our format ----
+function normalizeUnit(raw) {
+  const guide = analyzeUnit(raw);
+  return {
+    id: raw.id || raw.name,
+    name: raw.name || "Unknown",
+    title: raw.title || "",
+    type: raw.type || "?",
+    class: raw.class || "?",
+    rarity: raw.rarity || "?",
+    cost: raw.cost || 0,
+    stats: {
+      hp: raw.rainbowHP || raw.freeDupeHP || raw.maxLevelHP || 0,
+      atk: raw.rainbowAttack || raw.freeDupeAttack || raw.maxLevelAttack || 0,
+      def: raw.rainbowDefence || raw.freeDupeDefence || raw.maxDefence || 0,
+    },
+    leaderSkill: raw.leaderSkill || "None",
+    passive: raw.passive || "None",
+    superAttack: raw.superAttack || "None",
+    ultraSuperAttack: raw.ultraSuperAttack || null,
+    activeSkill: raw.activeSkill || null,
+    activeSkillCondition: raw.activeSkillCondition || null,
+    links: raw.links || [],
+    categories: raw.categories || [],
+    kiMultiplier: raw.kiMultiplier || null,
+    transformations: raw.transformations || [],
+    imageURL: raw.imageURL || null,
+    slot: guide.slot,
+    guide,
+  };
+}
+
+// ---- Format passive as bullet points ----
+function formatPassive(passiveText) {
+  if (!passiveText || passiveText === "None") return "<p class='section-body'>None</p>";
+  // Split on semicolons, "plus an additional", "and " at start of clauses, common passive separators
+  let parts = passiveText
+    .split(/;\s*/)
+    .flatMap(p => p.split(/(?:^|\s)plus an additional\s/i))
+    .map(p => p.trim())
+    .filter(p => p.length > 0);
+
+  // If no splits happened, try splitting on long comma patterns
+  if (parts.length <= 1) {
+    parts = passiveText
+      .split(/,\s*(?=[A-Z]|all |plus |when |if |per |at )/)
+      .map(p => p.trim())
+      .filter(p => p.length > 0);
+  }
+
+  // Capitalize first letter of each
+  parts = parts.map(p => p.charAt(0).toUpperCase() + p.slice(1));
+
+  return `<ul class="passive-list">${parts.map(p => `<li>${escHtml(p)}</li>`).join("")}</ul>`;
+}
+
+// ---- Full unit analysis ----
+function analyzeUnit(raw) {
+  const p = (raw.passive || "").toLowerCase();
+  const leader = (raw.leaderSkill || "").toLowerCase();
+  const sa = (raw.superAttack || "").toLowerCase();
+  const usa = (raw.ultraSuperAttack || "").toLowerCase();
+  const isLR = raw.rarity === "LR";
+  const unitType = (raw.type || "").toUpperCase();
+  const unitClass = (raw.class || "").toLowerCase();
+
+  // ========== SLOT ANALYSIS ==========
+  let score1 = 0, score2 = 0, score3 = 0;
+  let slotReasons = [];
+
+  // Slot 1 (tank/lead)
+  if (p.includes("damage reduction") || p.includes("damage received") || p.includes("reduces damage")) {
+    score1 += 3; slotReasons.push("Has damage reduction — can safely eat hits in slot 1.");
+  }
+  if (p.includes("guard") && (p.includes("all") || p.includes("activate"))) {
+    score1 += 4; slotReasons.push("Guards against all types — takes reduced damage no matter what.");
+  }
+  if (p.includes("evade") || p.includes("evasion")) {
+    score1 += 2; slotReasons.push("Has evasion — can dodge normal attacks before they hit your other units.");
+  }
+  if (p.includes("def +") && (p.includes("when receiving") || p.includes("when attacked"))) {
+    score1 += 2; slotReasons.push("Gets a DEF boost when attacked — gets tankier by taking hits.");
+  }
+  if (p.includes("raises def") || sa.includes("raises def") || usa.includes("raises def")) {
+    score1 += 1; score2 += 1;
+    slotReasons.push("Stacks DEF on super attack — gets tankier every turn, keep on main rotation.");
+  }
+
+  // Slot 2 (main damage)
+  if (p.includes("additional attack") || p.includes("additional super")) {
+    score2 += 3; slotReasons.push("Launches additional attacks — more damage and more chances to trigger effects.");
+  }
+  if (p.includes("critical") || p.includes("critical hit")) {
+    score2 += 2; slotReasons.push("Has built-in critical hit chance — big damage spikes.");
+  }
+  if (p.includes("effective against all") || p.includes("type effectiveness")) {
+    score2 += 3; slotReasons.push("Has type effectiveness against all — hits hard regardless of enemy type.");
+  }
+  if (p.includes("counter")) {
+    score2 += 2; score1 += 1;
+    slotReasons.push("Can counter enemy attacks — deals extra damage when hit.");
+  }
+  if (p.match(/atk & def \+\d{3,}/)) score2 += 2;
+
+  // Slot 3 (floater/support)
+  if (p.includes("allies' atk") || p.includes("allies' def") || p.includes("all allies")) {
+    score3 += 4; slotReasons.push("Buffs allies — float in slot 3 so both rotations get the support.");
+  }
+  if (p.includes("ki +") && (p.includes("allies") || p.includes("all "))) {
+    score3 += 2; slotReasons.push("Gives Ki to allies — helps the team super attack consistently.");
+  }
+  if (p.includes("enemy's atk") || p.includes("enemy's def") || p.includes("lower")) {
+    score3 += 1;
+  }
+
+  if (isLR) score2 += 1;
+
+  let slotName;
+  if (score1 >= score2 && score1 >= score3) {
+    slotName = "Slot 1 (Tank / Lead)";
+  } else if (score3 > score1 && score3 > score2) {
+    slotName = "Slot 3 (Floater / Support)";
+  } else {
+    slotName = "Slot 2 (Main Rotation)";
+  }
+
+  if (slotReasons.length === 0) {
+    slotReasons.push("General-purpose unit — flexible in most slots depending on the team.");
+  }
+
+  // ========== ORB ANALYSIS ==========
+  let orbAdvice = [];
+  const orbColor = { AGL: "Blue", TEQ: "Green", INT: "Purple", STR: "Red", PHY: "Orange" };
+  const color = orbColor[unitType] || unitType;
+
+  // Check for Ki Sphere mechanics in passive
+  const kiSphereMatch = p.match(/per (?:(\w+) )?ki sphere/i);
+  const rainbowOrb = p.includes("rainbow") && p.includes("ki sphere");
+  const specificOrbMatch = p.match(/per (agl|teq|int|str|phy) ki sphere/i);
+  const orbCountMatch = p.match(/with (\d+) or more ki spheres? obtained/i);
+
+  if (specificOrbMatch) {
+    const orbType = specificOrbMatch[1].toUpperCase();
+    const orbC = orbColor[orbType] || orbType;
+    orbAdvice.push(`This unit powers up <strong>per ${orbC} (${orbType}) Ki Sphere</strong> collected. Prioritize grabbing ${orbC} orbs over others to maximize their passive.`);
+  } else if (kiSphereMatch && !specificOrbMatch) {
+    orbAdvice.push(`Powers up <strong>per Ki Sphere obtained</strong> (any color). Grab as many orbs as possible — their passive scales with orb count.`);
+  }
+
+  if (rainbowOrb) {
+    orbAdvice.push(`Benefits from <strong>Rainbow Ki Spheres</strong>. Use items or support units that create rainbow orbs to boost them.`);
+  }
+
+  if (orbCountMatch) {
+    const count = orbCountMatch[1];
+    orbAdvice.push(`Needs <strong>${count}+ Ki Spheres</strong> to unlock part of their passive. Make sure they can collect at least ${count} orbs — pair with orb changers if needed.`);
+  }
+
+  if (isLR) {
+    orbAdvice.push(`As an LR, they need <strong>18+ Ki for their Ultra Super Attack</strong> (strongest move). Aim for at least 6 ${color} orbs or use Ki supports. At 12 Ki they do a weaker super, so always push for 18.`);
+  } else {
+    orbAdvice.push(`Needs <strong>12 Ki to super attack</strong>. Collect ${color} (${unitType}) orbs as their primary color. Usually 4-5 orbs is enough with link skills providing Ki.`);
+  }
+
+  // ========== PARTNER / CATEGORY ANALYSIS ==========
+  let partnerAdvice = [];
+  let categoryNeeds = [];
+
+  // Check for "name includes" conditions
+  const nameMatches = p.matchAll(/(?:whose |an? |the )name includes "([^"]+)"/gi);
+  for (const m of nameMatches) {
+    partnerAdvice.push(`Wants an ally whose name includes <strong>"${m[1]}"</strong> on the team — check the passive for what bonus this triggers.`);
+  }
+
+  // Check for category conditions in passive
+  const catConditions = [
+    ...p.matchAll(/"([^"]+)" category (?:allies?|characters?|members?)/gi),
+    ...p.matchAll(/(?:with|when|if) (?:\d+ or more )?"([^"]+)" category/gi),
+  ];
+  const seenCats = new Set();
+  for (const m of catConditions) {
+    const cat = m[1];
+    if (!seenCats.has(cat.toLowerCase())) {
+      seenCats.add(cat.toLowerCase());
+      categoryNeeds.push(cat);
+    }
+  }
+
+  // Check for class conditions
+  if (p.includes("super class") && p.includes("allies")) {
+    partnerAdvice.push(`Buffs or benefits from <strong>Super Class allies</strong>. Build a full Super Class team for maximum effect.`);
+  }
+  if (p.includes("extreme class") && p.includes("allies")) {
+    partnerAdvice.push(`Buffs or benefits from <strong>Extreme Class allies</strong>. Build a full Extreme Class team for maximum effect.`);
+  }
+
+  // Check for specific number of allies needed
+  const allyCountMatch = p.match(/(\d+) or more "([^"]+)" category (?:allies|characters)/i);
+  if (allyCountMatch) {
+    partnerAdvice.push(`Needs <strong>${allyCountMatch[1]}+ "${allyCountMatch[2]}" category allies</strong> on the team to fully activate their passive.`);
+  }
+
+  // Check for same name restrictions
+  if (p.includes("same name")) {
+    partnerAdvice.push(`Has conditions related to allies with the <strong>same name</strong> — check if they need or restrict same-name units.`);
+  }
+
+  // Leader skill category suggestions
+  const leaderCats = [...leader.matchAll(/"([^"]+)"/g)].map(m => m[1]);
+  if (leaderCats.length > 0) {
+    partnerAdvice.push(`Their leader skill boosts: <strong>${leaderCats.join(", ")}</strong>. Build your team from these categories for the best stat boost.`);
+  }
+
+  // Link skill partner suggestions
+  const keyLinks = (raw.links || []).filter(l =>
+    ["Prepared for Battle", "Over in a Flash", "Shocking Speed", "Fierce Battle",
+     "Big Bad Bosses", "Tournament of Power", "Kamehameha", "The Saiyan Lineage",
+     "Super Saiyan", "Fused Fighter", "Legendary Power", "Shattering the Limit"
+    ].includes(l)
+  );
+  if (keyLinks.length > 0) {
+    partnerAdvice.push(`Key link skills: <strong>${keyLinks.join(", ")}</strong>. Pair with units who share these links for Ki and ATK/DEF boosts.`);
+  }
+
+  if (categoryNeeds.length > 0) {
+    partnerAdvice.push(`Their passive specifically references these categories: <strong>${categoryNeeds.join(", ")}</strong>. Having allies from these categories on the rotation can unlock extra buffs.`);
+  }
+
+  if (partnerAdvice.length === 0) {
+    partnerAdvice.push("No specific ally conditions found in passive. Focus on shared link skills and categories for best synergy.");
+  }
+
+  // ========== LEADER SKILL CHECK ==========
+  const kiMatchL = leader.match(/ki \+(\d)/);
+  const statMatchL = leader.match(/hp.*atk.*def.*\+(\d+)%/);
+  let isGoodLeader = false;
+  if (kiMatchL && parseInt(kiMatchL[1]) >= 3 && statMatchL && parseInt(statMatchL[1]) >= 130) {
+    isGoodLeader = true;
+  }
+
+  return {
+    slot: slotName,
+    slotReasons,
+    orbAdvice,
+    partnerAdvice,
+    isGoodLeader,
+    leaderCats,
+  };
+}
+
+// ---- DOM references ----
+const listView = document.getElementById("listView");
+const detailView = document.getElementById("detailView");
+const unitListEl = document.getElementById("unitList");
+const detailContent = document.getElementById("detailContent");
+const searchInput = document.getElementById("searchInput");
+const backBtn = document.getElementById("backBtn");
+const paginationEl = document.getElementById("pagination");
+
+// ---- Build category dropdown ----
+function buildCategoryDropdown() {
+  const catSet = new Set();
+  allUnits.forEach(u => u.categories.forEach(c => catSet.add(c)));
+  const sorted = [...catSet].sort();
+  const select = document.getElementById("categoryFilter");
+  sorted.forEach(cat => {
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  });
+}
+
+// ---- Filtering ----
+function getFiltered() {
+  const q = searchInput.value.toLowerCase();
+  return allUnits.filter(u => {
+    // Text search
+    const matchesSearch = !q ||
+      u.name.toLowerCase().includes(q) ||
+      u.title.toLowerCase().includes(q) ||
+      u.type.toLowerCase().includes(q) ||
+      u.categories.some(c => c.toLowerCase().includes(q)) ||
+      u.links.some(l => l.toLowerCase().includes(q));
+
+    // Type filter
+    const matchesType = !filters.type || u.type === filters.type;
+
+    // Rarity filter
+    const matchesRarity = !filters.rarity || u.rarity === filters.rarity;
+
+    // Class filter
+    const matchesClass = !filters.class || u.class === filters.class;
+
+    // Category filter
+    const matchesCat = !filters.category || u.categories.includes(filters.category);
+
+    return matchesSearch && matchesType && matchesRarity && matchesClass && matchesCat;
+  });
+}
+
+// ---- Render active filter tags ----
+function renderActiveFilters() {
+  const container = document.getElementById("activeFilters");
+  const active = Object.entries(filters).filter(([k, v]) => v !== null);
+
+  if (active.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const labels = { type: "Type", rarity: "Rarity", class: "Class", category: "Category" };
+  container.innerHTML = active.map(([key, val]) =>
+    `<span class="active-filter-tag">${labels[key]}: ${val} <span class="clear-filter" onclick="clearFilter('${key}')">&times;</span></span>`
+  ).join("") + `<button class="clear-all-btn" onclick="clearAllFilters()">Clear all</button>`;
+}
+
+function clearFilter(key) {
+  filters[key] = null;
+  currentPage = 1;
+  // Reset button styles for that group
+  document.querySelectorAll(`.filter-btn[data-group="${key}"]`).forEach(btn => {
+    btn.className = "filter-btn";
+  });
+  if (key === "category") document.getElementById("categoryFilter").value = "";
+  renderActiveFilters();
+  renderList();
+}
+
+function clearAllFilters() {
+  filters = { type: null, rarity: null, class: null, category: null };
+  currentPage = 1;
+  document.querySelectorAll(".filter-btn").forEach(btn => btn.className = "filter-btn");
+  document.getElementById("categoryFilter").value = "";
+  renderActiveFilters();
+  renderList();
+}
+
+// ---- Render list with pagination ----
+function renderList() {
+  const filtered = getFiltered();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / UNITS_PER_PAGE));
+  if (currentPage > totalPages) currentPage = totalPages;
+
+  const start = (currentPage - 1) * UNITS_PER_PAGE;
+  const pageUnits = filtered.slice(start, start + UNITS_PER_PAGE);
+
+  if (filtered.length === 0) {
+    unitListEl.innerHTML = '<p class="empty">No units found.</p>';
+    paginationEl.innerHTML = "";
+    return;
+  }
+
+  unitListEl.innerHTML = pageUnits.map(u => `
+    <div class="card" onclick="showDetail('${u.id}')">
+      ${u.imageURL ? `<img class="card-thumb" src="${u.imageURL}" alt="${escHtml(u.name)}" loading="lazy" onerror="this.style.display='none'">` : ""}
+      <div class="card-info">
+        <div class="card-header">
+          <span class="badge badge-${u.type}">${u.type}</span>
+          <span class="badge badge-${u.class.toLowerCase()}">${u.class}</span>
+          <span class="rarity">${u.rarity}</span>
+        </div>
+        <div class="unit-name">${escHtml(u.name)}</div>
+        <div class="unit-title">${escHtml(u.title)}</div>
+        <div class="slot-preview">
+          <span class="label">Best Slot:</span>
+          <span class="value">${u.slot}</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  paginationEl.innerHTML = `
+    <button class="page-btn" onclick="changePage(-1)" ${currentPage <= 1 ? "disabled" : ""}>&laquo; Prev</button>
+    <span class="page-info">${currentPage} / ${totalPages} (${filtered.length} units)</span>
+    <button class="page-btn" onclick="changePage(1)" ${currentPage >= totalPages ? "disabled" : ""}>Next &raquo;</button>
+  `;
+}
+
+function changePage(dir) {
+  currentPage += dir;
+  renderList();
+  window.scrollTo(0, 0);
+}
+
+function escHtml(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ---- Stat bar ----
+function statBar(label, value, max) {
+  const pct = Math.min((value / max) * 100, 100);
+  return `
+    <div class="stat-row">
+      <span class="stat-label">${label}</span>
+      <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%"></div></div>
+      <span class="stat-value">${value.toLocaleString()}</span>
+    </div>`;
+}
+
+// ---- Detail view ----
+function showDetail(id) {
+  const u = allUnits.find(x => x.id === id);
+  if (!u) return;
+
+  listView.classList.add("hidden");
+  detailView.classList.add("active");
+
+  const g = u.guide;
+
+  let html = `
+    <div class="detail-header">
+      ${u.imageURL ? `<img class="detail-thumb" src="${u.imageURL}" alt="${escHtml(u.name)}" onerror="this.style.display='none'">` : ""}
+      <div class="detail-header-info">
+        <div class="card-header">
+          <span class="badge badge-${u.type}">${u.type}</span>
+          <span class="badge badge-${u.class.toLowerCase()}">${u.class}</span>
+          <span class="rarity">${u.rarity}</span>
+        </div>
+        <div class="unit-name" style="font-size:24px;font-weight:800">${escHtml(u.name)}</div>
+        <div class="unit-title">${escHtml(u.title)}</div>
+      </div>
+    </div>
+
+    <!-- ===== HOW TO USE GUIDE ===== -->
+    <div class="section">
+      <div class="section-title">HOW TO USE THIS UNIT</div>
+
+      <div class="guide-block">
+        <div class="guide-block-title"><span class="icon">&#9744;</span> BEST SLOT</div>
+        <div class="slot-box">${u.slot}</div>
+        <div class="guide-block-body">
+          ${g.slotReasons.map(r => "&#8226; " + r).join("<br>")}
+          ${g.isGoodLeader ? '<br><br><span class="guide-highlight">STRONG LEADER</span> This unit has a great leader skill — consider using them as your team leader.' : ""}
+        </div>
+      </div>
+
+      <div class="guide-block">
+        <div class="guide-block-title"><span class="icon">&#11044;</span> KI &amp; ORBS</div>
+        <div class="guide-block-body">
+          ${g.orbAdvice.map(a => "&#8226; " + a).join("<br>")}
+        </div>
+      </div>
+
+      <div class="guide-block">
+        <div class="guide-block-title"><span class="icon">&#9733;</span> BEST PARTNERS &amp; TEAM</div>
+        <div class="guide-block-body">
+          ${g.partnerAdvice.map(a => "&#8226; " + a).join("<br>")}
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <div class="section">
+      <div class="section-title">STATS (Rainbow)</div>
+      ${statBar("HP", u.stats.hp, 30000)}
+      ${statBar("ATK", u.stats.atk, 25000)}
+      ${statBar("DEF", u.stats.def, 18000)}
+    </div>
+
+    <!-- ===== LEADER SKILL ===== -->
+    <div class="section">
+      <div class="section-title">LEADER SKILL</div>
+      <div class="section-body">${escHtml(u.leaderSkill)}</div>
+    </div>
+
+    <!-- ===== PASSIVE (bullet points) ===== -->
+    <div class="section">
+      <div class="section-title">PASSIVE SKILL</div>
+      ${formatPassive(u.passive)}
+    </div>
+
+    <!-- ===== SUPER ATTACK ===== -->
+    <div class="section">
+      <div class="section-title">SUPER ATTACK</div>
+      <div class="section-body">${escHtml(u.superAttack)}</div>
+    </div>`;
+
+  if (u.ultraSuperAttack) {
+    html += `
+    <div class="section">
+      <div class="section-title">ULTRA SUPER ATTACK (18 Ki)</div>
+      <div class="section-body">${escHtml(u.ultraSuperAttack)}</div>
+    </div>`;
+  }
+
+  if (u.activeSkill) {
+    html += `
+    <div class="section">
+      <div class="section-title">ACTIVE SKILL</div>
+      ${u.activeSkillCondition ? `<div class="condition">Condition: ${escHtml(u.activeSkillCondition)}</div>` : ""}
+      <div class="section-body">${escHtml(u.activeSkill)}</div>
+    </div>`;
+  }
+
+  if (u.kiMultiplier) {
+    html += `
+    <div class="section">
+      <div class="section-title">KI MULTIPLIER</div>
+      <div class="section-body">${escHtml(u.kiMultiplier)}</div>
+    </div>`;
+  }
+
+  if (u.transformations && u.transformations.length > 0) {
+    html += `
+    <div class="section">
+      <div class="section-title">TRANSFORMATIONS</div>
+      <div class="section-body">${u.transformations.map(t => escHtml(typeof t === "string" ? t : JSON.stringify(t))).join("<br>")}</div>
+    </div>`;
+  }
+
+  html += `
+    <div class="section">
+      <div class="section-title">LINK SKILLS (${u.links.length})</div>
+      <div class="tags">${u.links.map(l => `<span class="tag">${escHtml(l)}</span>`).join("")}</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">CATEGORIES (${u.categories.length})</div>
+      <div class="tags">${u.categories.map(c => `<span class="tag tag-cat">${escHtml(c)}</span>`).join("")}</div>
+    </div>`;
+
+  detailContent.innerHTML = html;
+  window.scrollTo(0, 0);
+}
+
+// ---- Event listeners ----
+backBtn.addEventListener("click", () => {
+  detailView.classList.remove("active");
+  listView.classList.remove("hidden");
+});
+
+let searchTimeout;
+searchInput.addEventListener("input", () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentPage = 1;
+    renderList();
+  }, 200);
+});
+
+// Filter buttons — toggle on/off within each group
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const group = btn.dataset.group;
+    const value = btn.dataset.value;
+
+    // If already active, turn it off
+    if (filters[group] === value) {
+      filters[group] = null;
+      btn.className = "filter-btn";
+    } else {
+      // Deactivate other buttons in same group
+      document.querySelectorAll(`.filter-btn[data-group="${group}"]`).forEach(b => {
+        b.className = "filter-btn";
+      });
+      // Activate this one
+      filters[group] = value;
+      const typeColors = ["INT","AGL","TEQ","STR","PHY"];
+      const classColors = ["super","extreme"];
+      if (typeColors.includes(value)) {
+        btn.classList.add("active-" + value);
+      } else if (classColors.includes(value.toLowerCase())) {
+        btn.classList.add("active-" + value.toLowerCase());
+      } else {
+        btn.classList.add("active");
+      }
+    }
+
+    currentPage = 1;
+    renderActiveFilters();
+    renderList();
+  });
+});
+
+// Category dropdown
+document.getElementById("categoryFilter").addEventListener("change", (e) => {
+  filters.category = e.target.value || null;
+  currentPage = 1;
+  renderActiveFilters();
+  renderList();
+});
+
+// ---- Start ----
+loadData();
+</script>
+</body>
+</html>
