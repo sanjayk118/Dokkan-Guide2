@@ -158,7 +158,6 @@
       font-size: 13px;
     }
 
-<<<<<<< HEAD
     /* ---- Unit Grid ---- */
     .unit-grid {
       display: grid;
@@ -183,32 +182,10 @@
       width: 56px;
       height: 56px;
       border-radius: 8px;
-=======
-    /* ---- Unit Cards ---- */
-    .card {
-      background: #16213E;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 12px;
-      border-left: 4px solid #FFD700;
-      cursor: pointer;
-      transition: transform 0.15s;
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-    .card:hover { transform: scale(1.02); }
-
-    .card-thumb {
-      width: 72px;
-      height: 72px;
-      border-radius: 10px;
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
       object-fit: cover;
       background: #0F3460;
       flex-shrink: 0;
       border: 2px solid #FFD70044;
-<<<<<<< HEAD
       margin-bottom: 4px;
     }
 
@@ -254,26 +231,6 @@
       border-radius: 4px;
       padding: 2px 6px;
       font-size: 10px;
-=======
-    }
-
-    .card-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .badge {
-      border-radius: 6px;
-      padding: 3px 10px;
-      font-size: 12px;
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
       font-weight: 700;
       color: #FFF;
     }
@@ -289,10 +246,6 @@
       color: #FFD700;
       font-size: 13px;
       font-weight: 700;
-<<<<<<< HEAD
-=======
-      margin-left: auto;
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
     }
 
     .unit-name {
@@ -307,20 +260,6 @@
       margin-bottom: 10px;
     }
 
-<<<<<<< HEAD
-=======
-    .slot-preview {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #0F3460;
-      border-radius: 8px;
-      padding: 8px;
-    }
-    .slot-preview .label { color: #FFD700; font-size: 12px; font-weight: 700; }
-    .slot-preview .value { color: #FFF; font-size: 12px; }
-
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
     .empty { color: #888; text-align: center; margin-top: 40px; font-size: 16px; }
 
     /* Pagination */
@@ -344,11 +283,7 @@
     .page-info { color: #AAA; font-size: 13px; }
 
     /* ---- Detail View ---- */
-<<<<<<< HEAD
     .detail-view { display: none; max-width: 600px; }
-=======
-    .detail-view { display: none; }
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
     .detail-view.active { display: block; }
     .list-view.hidden { display: none; }
 
@@ -506,7 +441,6 @@
     .guide-block-body strong {
       color: #FFF;
     }
-<<<<<<< HEAD
     .guide-block-body .tip-item {
       display: flex;
       align-items: flex-start;
@@ -615,8 +549,6 @@
       margin-left: 2px;
       vertical-align: middle;
     }
-=======
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
     .guide-highlight {
       display: inline-block;
       background: #FFD70022;
@@ -687,11 +619,7 @@
 // ---- State ----
 let allUnits = [];
 let currentPage = 1;
-<<<<<<< HEAD
 const UNITS_PER_PAGE = 60;
-=======
-const UNITS_PER_PAGE = 20;
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
 
 // Multi-filter state — each can be null (off) or a value
 let filters = {
@@ -743,7 +671,6 @@ function normalizeUnit(raw) {
     kiMultiplier: raw.kiMultiplier || null,
     transformations: raw.transformations || [],
     imageURL: raw.imageURL || null,
-<<<<<<< HEAD
     ezaLeaderSkill: raw.ezaLeaderSkill || null,
     ezaSuperAttack: raw.ezaSuperAttack || null,
     ezaUltraSuperAttack: raw.ezaUltraSuperAttack || null,
@@ -755,8 +682,6 @@ function normalizeUnit(raw) {
     transformCondition: raw.transformCondition || null,
     exSuperAttack: raw.exSuperAttack || null,
     exSuperCondition: raw.exSuperCondition || null,
-=======
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
     slot: guide.slot,
     guide,
   };
@@ -789,17 +714,13 @@ function formatPassive(passiveText) {
 // ---- Full unit analysis ----
 function analyzeUnit(raw) {
   const p = (raw.passive || "").toLowerCase();
-<<<<<<< HEAD
   const pOrig = raw.passive || "";
-=======
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   const leader = (raw.leaderSkill || "").toLowerCase();
   const sa = (raw.superAttack || "").toLowerCase();
   const usa = (raw.ultraSuperAttack || "").toLowerCase();
   const isLR = raw.rarity === "LR";
   const unitType = (raw.type || "").toUpperCase();
   const unitClass = (raw.class || "").toLowerCase();
-<<<<<<< HEAD
   const hasTransforms = (raw.transformations || []).length > 0;
   const hasActive = !!(raw.activeSkill);
   const activeCondition = (raw.activeSkillCondition || "").toLowerCase();
@@ -998,14 +919,11 @@ function analyzeUnit(raw) {
   const atkDefPct = atkDefMatch ? parseInt(atkDefMatch[1]) : 0;
 
   const bigBadBosses = (raw.links || []).includes("Big Bad Bosses");
-=======
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
 
   // ========== SLOT ANALYSIS ==========
   let score1 = 0, score2 = 0, score3 = 0;
   let slotReasons = [];
 
-<<<<<<< HEAD
   // Tanking (Slot 1)
   if (hasDmgReduction) {
     score1 += 3;
@@ -1137,56 +1055,10 @@ function analyzeUnit(raw) {
     if (onceSlots.length > 0) {
       slotReasons.push(`<span style="color:#FFD700">⚡ IMPORTANT:</span> Some slot bonuses (${onceSlots.join(", ")}) are <strong>once only per battle</strong> — they only trigger the first time you use that slot. You can <strong>save them for a clutch moment</strong> or use them early for a strong start.`);
     }
-=======
-  // Slot 1 (tank/lead)
-  if (p.includes("damage reduction") || p.includes("damage received") || p.includes("reduces damage")) {
-    score1 += 3; slotReasons.push("Has damage reduction — can safely eat hits in slot 1.");
-  }
-  if (p.includes("guard") && (p.includes("all") || p.includes("activate"))) {
-    score1 += 4; slotReasons.push("Guards against all types — takes reduced damage no matter what.");
-  }
-  if (p.includes("evade") || p.includes("evasion")) {
-    score1 += 2; slotReasons.push("Has evasion — can dodge normal attacks before they hit your other units.");
-  }
-  if (p.includes("def +") && (p.includes("when receiving") || p.includes("when attacked"))) {
-    score1 += 2; slotReasons.push("Gets a DEF boost when attacked — gets tankier by taking hits.");
-  }
-  if (p.includes("raises def") || sa.includes("raises def") || usa.includes("raises def")) {
-    score1 += 1; score2 += 1;
-    slotReasons.push("Stacks DEF on super attack — gets tankier every turn, keep on main rotation.");
-  }
-
-  // Slot 2 (main damage)
-  if (p.includes("additional attack") || p.includes("additional super")) {
-    score2 += 3; slotReasons.push("Launches additional attacks — more damage and more chances to trigger effects.");
-  }
-  if (p.includes("critical") || p.includes("critical hit")) {
-    score2 += 2; slotReasons.push("Has built-in critical hit chance — big damage spikes.");
-  }
-  if (p.includes("effective against all") || p.includes("type effectiveness")) {
-    score2 += 3; slotReasons.push("Has type effectiveness against all — hits hard regardless of enemy type.");
-  }
-  if (p.includes("counter")) {
-    score2 += 2; score1 += 1;
-    slotReasons.push("Can counter enemy attacks — deals extra damage when hit.");
-  }
-  if (p.match(/atk & def \+\d{3,}/)) score2 += 2;
-
-  // Slot 3 (floater/support)
-  if (p.includes("allies' atk") || p.includes("allies' def") || p.includes("all allies")) {
-    score3 += 4; slotReasons.push("Buffs allies — float in slot 3 so both rotations get the support.");
-  }
-  if (p.includes("ki +") && (p.includes("allies") || p.includes("all "))) {
-    score3 += 2; slotReasons.push("Gives Ki to allies — helps the team super attack consistently.");
-  }
-  if (p.includes("enemy's atk") || p.includes("enemy's def") || p.includes("lower")) {
-    score3 += 1;
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   }
 
   if (isLR) score2 += 1;
 
-<<<<<<< HEAD
   let slotName, slotExplain;
   if (hasSlotConditional) {
     // For slot-conditional units, give more nuanced advice
@@ -1203,22 +1075,12 @@ function analyzeUnit(raw) {
   } else {
     slotName = "Slot 2 — Main Rotation";
     slotExplain = "This unit deals big damage. Keep them on the main rotation (slots 1 or 2) so they attack every turn.";
-=======
-  let slotName;
-  if (score1 >= score2 && score1 >= score3) {
-    slotName = "Slot 1 (Tank / Lead)";
-  } else if (score3 > score1 && score3 > score2) {
-    slotName = "Slot 3 (Floater / Support)";
-  } else {
-    slotName = "Slot 2 (Main Rotation)";
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   }
 
   if (slotReasons.length === 0) {
     slotReasons.push("General-purpose unit — flexible in most slots depending on the team.");
   }
 
-<<<<<<< HEAD
   // ========== TURN-BY-TURN STRATEGY ==========
   let turnStrategy = [];
 
@@ -1338,30 +1200,20 @@ function analyzeUnit(raw) {
   if (isLR) contentAdvice.push("<strong>Any hard content</strong> — as an LR, their raw stats make them viable almost everywhere.");
   if (contentAdvice.length === 0) contentAdvice.push("<strong>General content</strong> — works well in most events. May struggle in the hardest endgame content without support.");
 
-=======
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   // ========== ORB ANALYSIS ==========
   let orbAdvice = [];
   const orbColor = { AGL: "Blue", TEQ: "Green", INT: "Purple", STR: "Red", PHY: "Orange" };
   const color = orbColor[unitType] || unitType;
 
-<<<<<<< HEAD
-=======
-  // Check for Ki Sphere mechanics in passive
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   const kiSphereMatch = p.match(/per (?:(\w+) )?ki sphere/i);
   const rainbowOrb = p.includes("rainbow") && p.includes("ki sphere");
   const specificOrbMatch = p.match(/per (agl|teq|int|str|phy) ki sphere/i);
   const orbCountMatch = p.match(/with (\d+) or more ki spheres? obtained/i);
-<<<<<<< HEAD
   const kiPerSphere = p.includes("ki +") && p.includes("per") && p.includes("ki sphere");
-=======
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
 
   if (specificOrbMatch) {
     const orbType = specificOrbMatch[1].toUpperCase();
     const orbC = orbColor[orbType] || orbType;
-<<<<<<< HEAD
     orbAdvice.push(`Powers up <strong>per ${orbC} (${orbType}) Ki Sphere</strong>. Prioritize ${orbC} orbs to maximize damage.`);
     orbAdvice.push(`Pair with orb changers that create ${orbC} orbs for the biggest boost.`);
   } else if (kiSphereMatch) {
@@ -1387,47 +1239,17 @@ function analyzeUnit(raw) {
     orbAdvice.push(`Always aim for <strong>18 Ki</strong>. That means ~6 ${color} orbs plus Ki from links. Use Ki supports if they struggle to reach 18.`);
   } else {
     orbAdvice.push(`Needs <strong>12 Ki to super attack</strong>. Their orb color is ${color} (${unitType}). Usually 4-5 matching orbs + link Ki is enough.`);
-=======
-    orbAdvice.push(`This unit powers up <strong>per ${orbC} (${orbType}) Ki Sphere</strong> collected. Prioritize grabbing ${orbC} orbs over others to maximize their passive.`);
-  } else if (kiSphereMatch && !specificOrbMatch) {
-    orbAdvice.push(`Powers up <strong>per Ki Sphere obtained</strong> (any color). Grab as many orbs as possible — their passive scales with orb count.`);
-  }
-
-  if (rainbowOrb) {
-    orbAdvice.push(`Benefits from <strong>Rainbow Ki Spheres</strong>. Use items or support units that create rainbow orbs to boost them.`);
-  }
-
-  if (orbCountMatch) {
-    const count = orbCountMatch[1];
-    orbAdvice.push(`Needs <strong>${count}+ Ki Spheres</strong> to unlock part of their passive. Make sure they can collect at least ${count} orbs — pair with orb changers if needed.`);
-  }
-
-  if (isLR) {
-    orbAdvice.push(`As an LR, they need <strong>18+ Ki for their Ultra Super Attack</strong> (strongest move). Aim for at least 6 ${color} orbs or use Ki supports. At 12 Ki they do a weaker super, so always push for 18.`);
-  } else {
-    orbAdvice.push(`Needs <strong>12 Ki to super attack</strong>. Collect ${color} (${unitType}) orbs as their primary color. Usually 4-5 orbs is enough with link skills providing Ki.`);
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   }
 
   // ========== PARTNER / CATEGORY ANALYSIS ==========
   let partnerAdvice = [];
   let categoryNeeds = [];
 
-<<<<<<< HEAD
   const nameMatches = p.matchAll(/(?:whose |an? |the )name includes "([^"]+)"/gi);
   for (const m of nameMatches) {
     partnerAdvice.push(`Wants an ally whose name includes <strong>"${m[1]}"</strong> — check the passive for what bonus this triggers.`);
   }
 
-=======
-  // Check for "name includes" conditions
-  const nameMatches = p.matchAll(/(?:whose |an? |the )name includes "([^"]+)"/gi);
-  for (const m of nameMatches) {
-    partnerAdvice.push(`Wants an ally whose name includes <strong>"${m[1]}"</strong> on the team — check the passive for what bonus this triggers.`);
-  }
-
-  // Check for category conditions in passive
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   const catConditions = [
     ...p.matchAll(/"([^"]+)" category (?:allies?|characters?|members?)/gi),
     ...p.matchAll(/(?:with|when|if) (?:\d+ or more )?"([^"]+)" category/gi),
@@ -1435,7 +1257,6 @@ function analyzeUnit(raw) {
   const seenCats = new Set();
   for (const m of catConditions) {
     const cat = m[1];
-<<<<<<< HEAD
     if (!seenCats.has(cat.toLowerCase())) { seenCats.add(cat.toLowerCase()); categoryNeeds.push(cat); }
   }
 
@@ -1472,40 +1293,6 @@ function analyzeUnit(raw) {
     partnerAdvice.push(`Leader skill boosts: <strong>${leaderCats.join(", ")}</strong>. Fill your team from these categories.`);
   }
 
-=======
-    if (!seenCats.has(cat.toLowerCase())) {
-      seenCats.add(cat.toLowerCase());
-      categoryNeeds.push(cat);
-    }
-  }
-
-  // Check for class conditions
-  if (p.includes("super class") && p.includes("allies")) {
-    partnerAdvice.push(`Buffs or benefits from <strong>Super Class allies</strong>. Build a full Super Class team for maximum effect.`);
-  }
-  if (p.includes("extreme class") && p.includes("allies")) {
-    partnerAdvice.push(`Buffs or benefits from <strong>Extreme Class allies</strong>. Build a full Extreme Class team for maximum effect.`);
-  }
-
-  // Check for specific number of allies needed
-  const allyCountMatch = p.match(/(\d+) or more "([^"]+)" category (?:allies|characters)/i);
-  if (allyCountMatch) {
-    partnerAdvice.push(`Needs <strong>${allyCountMatch[1]}+ "${allyCountMatch[2]}" category allies</strong> on the team to fully activate their passive.`);
-  }
-
-  // Check for same name restrictions
-  if (p.includes("same name")) {
-    partnerAdvice.push(`Has conditions related to allies with the <strong>same name</strong> — check if they need or restrict same-name units.`);
-  }
-
-  // Leader skill category suggestions
-  const leaderCats = [...leader.matchAll(/"([^"]+)"/g)].map(m => m[1]);
-  if (leaderCats.length > 0) {
-    partnerAdvice.push(`Their leader skill boosts: <strong>${leaderCats.join(", ")}</strong>. Build your team from these categories for the best stat boost.`);
-  }
-
-  // Link skill partner suggestions
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   const keyLinks = (raw.links || []).filter(l =>
     ["Prepared for Battle", "Over in a Flash", "Shocking Speed", "Fierce Battle",
      "Big Bad Bosses", "Tournament of Power", "Kamehameha", "The Saiyan Lineage",
@@ -1513,7 +1300,6 @@ function analyzeUnit(raw) {
     ].includes(l)
   );
   if (keyLinks.length > 0) {
-<<<<<<< HEAD
     partnerAdvice.push(`Key links: <strong>${keyLinks.join(", ")}</strong>. Pair with units sharing these for Ki + ATK/DEF boosts.`);
   }
 
@@ -1544,24 +1330,12 @@ function analyzeUnit(raw) {
       transformTips.push("Has an <strong>enemy-related condition</strong> — may only work against certain opponents or phases.");
     }
     transformTips.push("Save it for when you need it most — usually a tough boss phase or when you need burst damage/defense.");
-=======
-    partnerAdvice.push(`Key link skills: <strong>${keyLinks.join(", ")}</strong>. Pair with units who share these links for Ki and ATK/DEF boosts.`);
-  }
-
-  if (categoryNeeds.length > 0) {
-    partnerAdvice.push(`Their passive specifically references these categories: <strong>${categoryNeeds.join(", ")}</strong>. Having allies from these categories on the rotation can unlock extra buffs.`);
-  }
-
-  if (partnerAdvice.length === 0) {
-    partnerAdvice.push("No specific ally conditions found in passive. Focus on shared link skills and categories for best synergy.");
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   }
 
   // ========== LEADER SKILL CHECK ==========
   const kiMatchL = leader.match(/ki \+(\d)/);
   const statMatchL = leader.match(/hp.*atk.*def.*\+(\d+)%/);
   let isGoodLeader = false;
-<<<<<<< HEAD
   let leaderTip = "";
   if (kiMatchL && parseInt(kiMatchL[1]) >= 3 && statMatchL && parseInt(statMatchL[1]) >= 130) {
     isGoodLeader = true;
@@ -1601,23 +1375,15 @@ function analyzeUnit(raw) {
       const cap = capMatches[0];
       quickTips.push(`Has <strong>stacking buffs with a cap</strong> (e.g. ${cap[1]}% per trigger, up to ${cap[2]}%) — builds up over multiple turns/attacks but hits a maximum. Plan around needing several turns to reach full power.`);
     }
-=======
-  if (kiMatchL && parseInt(kiMatchL[1]) >= 3 && statMatchL && parseInt(statMatchL[1]) >= 130) {
-    isGoodLeader = true;
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   }
 
   return {
     slot: slotName,
-<<<<<<< HEAD
     slotExplain,
-=======
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
     slotReasons,
     orbAdvice,
     partnerAdvice,
     isGoodLeader,
-<<<<<<< HEAD
     leaderTip,
     leaderCats,
     turnStrategy,
@@ -1625,9 +1391,6 @@ function analyzeUnit(raw) {
     contentAdvice,
     transformTips,
     quickTips,
-=======
-    leaderCats,
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   };
 }
 
@@ -1734,7 +1497,6 @@ function renderList() {
     return;
   }
 
-<<<<<<< HEAD
   unitListEl.innerHTML = '<div class="unit-grid">' + pageUnits.map(u => `
     <div class="card" onclick="showDetail('${u.id}')">
       ${u.imageURL ? `<img class="card-thumb" src="${u.imageURL}" alt="${escHtml(u.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'">` : '<div class="card-thumb"></div>'}
@@ -1744,26 +1506,6 @@ function renderList() {
       </div>
     </div>
   `).join("") + '</div>';
-=======
-  unitListEl.innerHTML = pageUnits.map(u => `
-    <div class="card" onclick="showDetail('${u.id}')">
-      ${u.imageURL ? `<img class="card-thumb" src="${u.imageURL}" alt="${escHtml(u.name)}" loading="lazy" onerror="this.style.display='none'">` : ""}
-      <div class="card-info">
-        <div class="card-header">
-          <span class="badge badge-${u.type}">${u.type}</span>
-          <span class="badge badge-${u.class.toLowerCase()}">${u.class}</span>
-          <span class="rarity">${u.rarity}</span>
-        </div>
-        <div class="unit-name">${escHtml(u.name)}</div>
-        <div class="unit-title">${escHtml(u.title)}</div>
-        <div class="slot-preview">
-          <span class="label">Best Slot:</span>
-          <span class="value">${u.slot}</span>
-        </div>
-      </div>
-    </div>
-  `).join("");
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
 
   paginationEl.innerHTML = `
     <button class="page-btn" onclick="changePage(-1)" ${currentPage <= 1 ? "disabled" : ""}>&laquo; Prev</button>
@@ -1795,7 +1537,6 @@ function statBar(label, value, max) {
     </div>`;
 }
 
-<<<<<<< HEAD
 // ---- Build a "form" object for base or transformed state ----
 // transformIndex: -1 = base, 0+ = transformation index
 // eza: false = non-EZA, true = EZA version
@@ -1913,47 +1654,10 @@ function renderForm(form) {
         <div class="guide-block-body">
           ${g.slotReasons.map(r => `<div class="tip-item"><span class="tip-bullet">▸</span><span>${r}</span></div>`).join("")}
           ${g.isGoodLeader ? `<div style="margin-top:8px"><span class="guide-highlight">STRONG LEADER</span> ${g.leaderTip}</div>` : ""}
-=======
-// ---- Detail view ----
-function showDetail(id) {
-  const u = allUnits.find(x => x.id === id);
-  if (!u) return;
-
-  listView.classList.add("hidden");
-  detailView.classList.add("active");
-
-  const g = u.guide;
-
-  let html = `
-    <div class="detail-header">
-      ${u.imageURL ? `<img class="detail-thumb" src="${u.imageURL}" alt="${escHtml(u.name)}" onerror="this.style.display='none'">` : ""}
-      <div class="detail-header-info">
-        <div class="card-header">
-          <span class="badge badge-${u.type}">${u.type}</span>
-          <span class="badge badge-${u.class.toLowerCase()}">${u.class}</span>
-          <span class="rarity">${u.rarity}</span>
-        </div>
-        <div class="unit-name" style="font-size:24px;font-weight:800">${escHtml(u.name)}</div>
-        <div class="unit-title">${escHtml(u.title)}</div>
-      </div>
-    </div>
-
-    <!-- ===== HOW TO USE GUIDE ===== -->
-    <div class="section">
-      <div class="section-title">HOW TO USE THIS UNIT</div>
-
-      <div class="guide-block">
-        <div class="guide-block-title"><span class="icon">&#9744;</span> BEST SLOT</div>
-        <div class="slot-box">${u.slot}</div>
-        <div class="guide-block-body">
-          ${g.slotReasons.map(r => "&#8226; " + r).join("<br>")}
-          ${g.isGoodLeader ? '<br><br><span class="guide-highlight">STRONG LEADER</span> This unit has a great leader skill — consider using them as your team leader.' : ""}
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
         </div>
       </div>
 
       <div class="guide-block">
-<<<<<<< HEAD
         <div class="guide-block-title"><span class="icon">&#128737;</span> DEFENSIVE ABILITY</div>
         <div class="guide-block-body">
           ${g.defTips.map(t => `<div class="tip-item"><span class="tip-bullet">▸</span><span>${t}</span></div>`).join("")}
@@ -1985,18 +1689,12 @@ function showDetail(id) {
         <div class="guide-block-title"><span class="icon">&#11044;</span> KI &amp; ORBS</div>
         <div class="guide-block-body">
           ${g.orbAdvice.map(a => `<div class="tip-item"><span class="tip-bullet">▸</span><span>${a}</span></div>`).join("")}
-=======
-        <div class="guide-block-title"><span class="icon">&#11044;</span> KI &amp; ORBS</div>
-        <div class="guide-block-body">
-          ${g.orbAdvice.map(a => "&#8226; " + a).join("<br>")}
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
         </div>
       </div>
 
       <div class="guide-block">
         <div class="guide-block-title"><span class="icon">&#9733;</span> BEST PARTNERS &amp; TEAM</div>
         <div class="guide-block-body">
-<<<<<<< HEAD
           ${g.partnerAdvice.map(a => `<div class="tip-item"><span class="tip-bullet">▸</span><span>${a}</span></div>`).join("")}
         </div>
       </div>
@@ -2077,75 +1775,11 @@ function showDetail(id) {
     <div class="section">
       <div class="section-title">KI MULTIPLIER</div>
       <div class="section-body">${escHtml(form.kiMultiplier)}</div>
-=======
-          ${g.partnerAdvice.map(a => "&#8226; " + a).join("<br>")}
-        </div>
-      </div>
-    </div>
-
-    <!-- ===== STATS ===== -->
-    <div class="section">
-      <div class="section-title">STATS (Rainbow)</div>
-      ${statBar("HP", u.stats.hp, 30000)}
-      ${statBar("ATK", u.stats.atk, 25000)}
-      ${statBar("DEF", u.stats.def, 18000)}
-    </div>
-
-    <!-- ===== LEADER SKILL ===== -->
-    <div class="section">
-      <div class="section-title">LEADER SKILL</div>
-      <div class="section-body">${escHtml(u.leaderSkill)}</div>
-    </div>
-
-    <!-- ===== PASSIVE (bullet points) ===== -->
-    <div class="section">
-      <div class="section-title">PASSIVE SKILL</div>
-      ${formatPassive(u.passive)}
-    </div>
-
-    <!-- ===== SUPER ATTACK ===== -->
-    <div class="section">
-      <div class="section-title">SUPER ATTACK</div>
-      <div class="section-body">${escHtml(u.superAttack)}</div>
-    </div>`;
-
-  if (u.ultraSuperAttack) {
-    html += `
-    <div class="section">
-      <div class="section-title">ULTRA SUPER ATTACK (18 Ki)</div>
-      <div class="section-body">${escHtml(u.ultraSuperAttack)}</div>
-    </div>`;
-  }
-
-  if (u.activeSkill) {
-    html += `
-    <div class="section">
-      <div class="section-title">ACTIVE SKILL</div>
-      ${u.activeSkillCondition ? `<div class="condition">Condition: ${escHtml(u.activeSkillCondition)}</div>` : ""}
-      <div class="section-body">${escHtml(u.activeSkill)}</div>
-    </div>`;
-  }
-
-  if (u.kiMultiplier) {
-    html += `
-    <div class="section">
-      <div class="section-title">KI MULTIPLIER</div>
-      <div class="section-body">${escHtml(u.kiMultiplier)}</div>
-    </div>`;
-  }
-
-  if (u.transformations && u.transformations.length > 0) {
-    html += `
-    <div class="section">
-      <div class="section-title">TRANSFORMATIONS</div>
-      <div class="section-body">${u.transformations.map(t => escHtml(typeof t === "string" ? t : JSON.stringify(t))).join("<br>")}</div>
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
     </div>`;
   }
 
   html += `
     <div class="section">
-<<<<<<< HEAD
       <div class="section-title">LINK SKILLS (${form.links.length})</div>
       <div class="tags">${form.links.map(l => `<span class="tag">${escHtml(l)}</span>`).join("")}</div>
     </div>
@@ -2212,17 +1846,6 @@ function renderDetailForm(transformIndex, eza) {
   const form = buildFormData(u, transformIndex, eza);
   html += renderForm(form);
 
-=======
-      <div class="section-title">LINK SKILLS (${u.links.length})</div>
-      <div class="tags">${u.links.map(l => `<span class="tag">${escHtml(l)}</span>`).join("")}</div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">CATEGORIES (${u.categories.length})</div>
-      <div class="tags">${u.categories.map(c => `<span class="tag tag-cat">${escHtml(c)}</span>`).join("")}</div>
-    </div>`;
-
->>>>>>> 8e3a174c1c328cbed15bc2c537210de156117869
   detailContent.innerHTML = html;
   window.scrollTo(0, 0);
 }
