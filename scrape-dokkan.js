@@ -130,25 +130,61 @@ function parseDate(raw) {
   return new Date(parseInt(match[3]), monthNum, parseInt(match[1]));
 }
 
-function extractImageURL(wikitext) {
+function extractImageFilename(wikitext) {
   // Try thumb apng first (animated), then thumb
   const apng = extractField(wikitext, "thumb apng");
-  if (apng && apng.startsWith("http")) return apng.trim();
+  if (apng && apng.startsWith("http")) return apng.trim(); // Already a full URL
 
   // Try to extract from thumb field [[File:Card XXXXX thumb.png|...]]
   const thumb = extractField(wikitext, "thumb");
   const fileMatch = thumb.match(/Card[_ ](\d+)[_ ]thumb[^.]*\.png/);
   if (fileMatch) {
-    return `https://static.wikia.nocookie.net/dbz-dokkanbattle/images/thumb/Card_${fileMatch[1]}_thumb.png/120px-Card_${fileMatch[1]}_thumb.png`;
+    return `Card_${fileMatch[1]}_thumb.png`;
   }
 
   // Try from ID
   const id = extractField(wikitext, "ID");
   if (id) {
-    return `https://static.wikia.nocookie.net/dbz-dokkanbattle/images/thumb/Card_10${id}_thumb.png/120px-Card_10${id}_thumb.png`;
+    return `Card_10${id}_thumb.png`;
   }
 
   return null;
+}
+
+// Batch resolve image filenames to real Fandom CDN URLs via API (up to 50 at a time)
+async function resolveImageURLs(filenames) {
+  const urlMap = {};
+  const toResolve = filenames.filter(f => f && f.indexOf("http") === -1);
+  const alreadyURLs = filenames.filter(f => f && f.startsWith("http"));
+  alreadyURLs.forEach(u => { urlMap[u] = u; });
+
+  const batchSize = 50;
+  for (let i = 0; i < toResolve.length; i += batchSize) {
+    const batch = toResolve.slice(i, i + batchSize);
+    const titles = batch.map(f => "File:" + f).join("|");
+    const url = `${API_BASE}?action=query&titles=${encodeURIComponent(titles)}&prop=imageinfo&iiprop=url&format=json`;
+    try {
+      const data = await fetch(url);
+      const pages = data.query && data.query.pages ? data.query.pages : {};
+      for (const pageId of Object.keys(pages)) {
+        const page = pages[pageId];
+        if (page.imageinfo && page.imageinfo[0] && page.imageinfo[0].url) {
+          // API returns spaces in title, we use underscores — normalize both
+          const fname = page.title.replace(/^File:/, "").replace(/ /g, "_");
+          urlMap[fname] = page.imageinfo[0].url;
+        }
+      }
+    } catch (e) {
+      console.error("  Error resolving image batch:", e.message);
+    }
+    if (i + batchSize < toResolve.length) {
+      await new Promise(r => setTimeout(r, 200));
+    }
+    if ((i / batchSize) % 10 === 0 && i > 0) {
+      console.log(`  Resolved ${i}/${toResolve.length} images...`);
+    }
+  }
+  return urlMap;
 }
 
 // ---- Tabber / multi-form helpers ----
@@ -186,7 +222,7 @@ function parseFormData(templateText) {
   const activeSkill = cleanWikiMarkup(extractField(templateText, "Active description")) || null;
   const activeSkillCondition = cleanWikiMarkup(extractField(templateText, "Active condition")) || null;
   const leaderSkill = cleanWikiMarkup(extractField(templateText, "LS description"));
-  const imageURL = extractImageURL(templateText);
+  const imageURL = extractImageFilename(templateText);
   const links = parseLinks(extractField(templateText, "Link skill"));
   const categories = parseCategories(extractField(templateText, "Category"));
 
@@ -305,7 +341,7 @@ function parseUnit(wikitext, pageTitle) {
   if (ki12) kiMultiplier = "12 Ki: " + ki12 + (ki24 ? " | 24 Ki: " + ki24 : "");
 
   // Image
-  const imageURL = extractImageURL(baseText);
+  const imageURL = extractImageFilename(baseText);
 
   // Transform metadata from base form
   const transformType = cleanWikiMarkup(extractField(baseText, "Transform type")) || null;
@@ -434,7 +470,38 @@ async function main() {
   }
 
   console.log("\n");
-  console.log(`Step 3: Writing ${OUTPUT_FILE}...`);
+
+  // Step 3: Resolve image URLs via Fandom API
+  console.log("Step 3: Resolving image URLs...");
+  const allFilenames = new Set();
+  for (const u of units) {
+    if (u.imageURL && u.imageURL.indexOf("http") === -1) allFilenames.add(u.imageURL);
+    for (const t of u.transformations) {
+      if (t.imageURL && t.imageURL.indexOf("http") === -1) allFilenames.add(t.imageURL);
+    }
+  }
+  console.log(`  ${allFilenames.size} unique image filenames to resolve`);
+  const urlMap = await resolveImageURLs([...allFilenames]);
+  const resolved = Object.keys(urlMap).length;
+  console.log(`  Resolved ${resolved}/${allFilenames.size} images`);
+
+  // Apply resolved URLs
+  for (const u of units) {
+    if (u.imageURL && urlMap[u.imageURL]) {
+      u.imageURL = urlMap[u.imageURL];
+    } else if (u.imageURL && u.imageURL.indexOf("http") === -1) {
+      u.imageURL = null; // Could not resolve
+    }
+    for (const t of u.transformations) {
+      if (t.imageURL && urlMap[t.imageURL]) {
+        t.imageURL = urlMap[t.imageURL];
+      } else if (t.imageURL && t.imageURL.indexOf("http") === -1) {
+        t.imageURL = null;
+      }
+    }
+  }
+
+  console.log(`\nStep 4: Writing ${OUTPUT_FILE}...`);
   const withTransforms = units.filter(u => u.transformations.length > 0).length;
   const withEZA = units.filter(u => u.ezaPassive).length;
   const totalForms = units.reduce((s, u) => s + u.transformations.length, 0);
