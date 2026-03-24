@@ -42091,8 +42091,11 @@ function analyzeUnit(raw) {
 
   // Late (7+)
   let lateTips = [];
-  if (hasDefStack) lateTips.push("DEF is <strong>fully stacked</strong> — this unit is now one of your best tanks. Permanent DEF is massive by now.");
-  if (hasGreatlyDefStack) lateTips.push("\"Greatly raises DEF\" stacks are <strong>huge</strong> — nearly invincible. Trust them to take any hit.");
+  if (hasDefStack) {
+    lateTips.push("DEF is <strong>fully stacked</strong> — this unit is now one of your best tanks. Permanent DEF is massive by now.");
+    if (!hasDmgReduction && !hasGuard) lateTips.push('<span style="color:#FF9800">⚠ But beware DEF-ignore phases</span> — some late boss phases (Jiren Phase 2, newer Red Zones) ignore your DEF entirely. All that stacking becomes meaningless. If the boss ignores DEF, you need DR/guard allies to survive.');
+  }
+  if (hasGreatlyDefStack) lateTips.push("\"Greatly raises DEF\" stacks are <strong>huge</strong> — excellent in most content. But even massive stacked DEF won't save you against bosses that ignore defense.");
   if (hasDefTempBoost && !hasDefStack) lateTips.push("DEF boost is still temporary — they're <strong>no tankier now than on turn 1</strong>. Not ideal for long events.");
   if (stacksAtkNotDef) lateTips.push('<span style="color:#FF9800">⚠ ATK is high but DEF hasn\'t improved</span> — they hit hard by now but are just as fragile as turn 1. Bosses hit hardest in late phases, so <strong>protect this unit with support or items</strong>.');
   if (hasActive && !activeCondition.includes("once")) lateTips.push("If active skill is unused, now is a good time — bosses hit hardest in later phases.");
@@ -42105,13 +42108,18 @@ function analyzeUnit(raw) {
 
   // ========== DEFENSIVE TIPS ==========
   let defTips = [];
-  if (hasGuard) defTips.push("Guards all attacks — <strong>type disadvantage doesn't matter</strong>. Can tank any enemy type safely.");
+  if (hasGuard) {
+    defTips.push("Guards all attacks — <strong>type disadvantage doesn't matter</strong>. Can tank any enemy type safely.");
+    if (!hasDmgReduction) defTips.push('<span style="color:#FF9800">Note:</span> Guard alone without DR may not be enough for the hardest bosses. Modern Red Zone/Tamagami supers hit for 1M+ — guard helps but you still take massive damage without DR on top of it.');
+  }
   if (hasDmgReduction) {
     const hasDRVariation = totalDR.slot1 !== totalDR.slot2 || totalDR.slot1 !== totalDR.slot3;
-    if (maxDR >= 40) {
-      defTips.push(`<strong>Up to ${maxDR}% total damage reduction</strong>${hasDRVariation ? ` (${baseDR}% base, up to ${maxDR}% with slot bonuses)` : ""} — extremely tanky. One of the best defensive abilities.`);
+    if (maxDR >= 60) {
+      defTips.push(`<strong>Up to ${maxDR}% total damage reduction</strong>${hasDRVariation ? ` (${baseDR}% base, up to ${maxDR}% with slot bonuses)` : ""} — elite-level tanking. Even modern bosses hitting for 1M+ deal manageable damage. This is the gold standard for hard content.`);
+    } else if (maxDR >= 40) {
+      defTips.push(`<strong>Up to ${maxDR}% total damage reduction</strong>${hasDRVariation ? ` (${baseDR}% base, up to ${maxDR}% with slot bonuses)` : ""} — very strong, but modern bosses hit so hard that even with ${maxDR}% DR, supers from Red Zone/Tamagami bosses can still deal 400-600K+. Pair with guard or high DEF for best results.`);
     } else if (maxDR > 0) {
-      defTips.push(`<strong>${maxDR}% damage reduction</strong>${hasDRVariation ? ` (${baseDR}% base + conditional bonuses)` : ""} — solid mitigation on top of DEF.`);
+      defTips.push(`<strong>${maxDR}% damage reduction</strong>${hasDRVariation ? ` (${baseDR}% base + conditional bonuses)` : ""} — helps but ${maxDR}% is on the lower end for current hard content. Modern bosses super for 1M+ — at ${maxDR}% DR you're still taking ${Math.round((100-maxDR)/100 * 800)}K+ from those supers.`);
     } else {
       defTips.push("Has damage reduction — takes less damage from all attacks.");
     }
@@ -42144,6 +42152,9 @@ function analyzeUnit(raw) {
     } else {
       defTips.push("Super attack <strong>raises DEF permanently</strong> (stacks infinitely) — solid stacker, steadily gets tankier every turn.");
     }
+    if (!hasDmgReduction && !hasGuard) {
+      defTips.push('<span style="color:#FF9800">⚠ DEF stacking alone has limits in modern content:</span> Bosses like Jiren (Phase 2) <strong>ignore 100% of your DEF</strong>, making all stacking useless in that fight. Red Zone bosses that ignore 50-80% DEF also drastically reduce the value of stacking. Without DR or guard as backup, pure DEF stackers become vulnerable in the hardest phases.');
+    }
   }
   if (hasDefTempBoost && !hasDefStack) {
     if (saDefInfo.greatlyTempBoost || usaDefInfo.greatlyTempBoost) {
@@ -42152,7 +42163,13 @@ function analyzeUnit(raw) {
       defTips.push("Super attack <strong>raises DEF for 1 turn</strong> — moderate boost when they super, but it <strong>resets next turn</strong>. Does NOT permanently stack.");
     }
   }
-  if (hasGuardAndDR) defTips.push('<span style="color:#81C784">★ Guard + Damage Reduction combo</span> — one of the tankiest setups possible. Type disadvantage means nothing, and the damage reduction applies on top of guard. Very few attacks can threaten this unit.');
+  if (hasGuardAndDR) {
+    if (maxDR >= 60) {
+      defTips.push('<span style="color:#81C784">★ Guard + ' + maxDR + '% Damage Reduction</span> — elite defensive combo. This unit can tank almost anything in the game including modern Red Zone supers and Tamagami bosses. One of the safest units to put in slot 1 against any content.');
+    } else {
+      defTips.push('<span style="color:#81C784">★ Guard + Damage Reduction combo</span> — very tanky setup. Guard removes type disadvantage and DR reduces raw damage. However, at ' + maxDR + '% DR, the absolute hardest bosses (Tamagami, Jiren) can still deal significant damage through supers. Still one of the tankiest combos available.');
+    }
+  }
   if (hasHealing) {
     if (hasEndOfTurnHeal) defTips.push("<strong>Heals at end of every turn</strong> — incredible sustain. Great for bomb stages and long events. Keeps the team healthy without using items.");
     else defTips.push("Has HP recovery — helps sustain through longer fights without using items.");
@@ -42163,16 +42180,30 @@ function analyzeUnit(raw) {
   if (hasDodgeCancelVulnerability) defTips.push('<span style="color:#FF9800">⚠ Dodge-cancel vulnerability:</span> This unit\'s primary defense is dodge. Against bosses that cancel dodge (like some Red Zone and Tamagami bosses), <strong>they lose their main defense</strong>. In those fights, consider using a different unit or pairing with guard/DR support.');
   if (hasRawDefOnly && isLR) defTips.push('<span style="color:#FF9800">⚠ Raw DEF only:</span> No dodge, guard, or damage reduction. Against endgame bosses hitting for 10M+ or ignoring defense, raw DEF alone may not be enough. Needs team support to survive.');
   if (isTagUnit) defTips.push('<strong>Tag unit flexibility:</strong> Can switch between forms to adapt to the fight. Use the DR/guard form against normal bosses, and switch to the dodge form against bosses that ignore 100% defense. This counterplay is extremely valuable.');
+  // Multi-layered defense assessment
+  const defLayers = [hasGuard, hasDmgReduction && maxDR >= 30, hasEvade && maxEvade >= 30, hasDefStack, hasSurviveKO || hasRevive, hasNullify].filter(Boolean).length;
+  if (defLayers >= 3) {
+    defTips.push('<span style="color:#81C784">★ Multi-layered defense (' + defLayers + ' layers)</span> — modern hard content requires multiple defensive mechanics because bosses can cancel dodge, ignore DEF, or pierce DR. This unit has answers for multiple boss mechanics, making them viable across all content types.');
+  } else if (defLayers === 0 && isLR) {
+    defTips.push('<span style="color:#FF9800">⚠ No defensive layers</span> — modern Red Zone bosses super for 800K-1.2M, Tamagami bosses attack 5-8 times per turn, and some bosses ignore DEF entirely. Without dodge, guard, DR, or revive, this unit is a major liability in hard content. Keep them protected or use in easier events.');
+  }
   if (defTips.length === 0) {
-    defTips.push("No standout defensive abilities — <strong>avoid putting this unit in slot 1</strong> against strong enemies unless they have high raw DEF stats.");
+    defTips.push("No standout defensive abilities — <strong>avoid putting this unit in slot 1</strong> against strong enemies. Modern bosses hit for 800K-1M+ on supers and attack multiple times per turn.");
   }
 
   // ========== WHERE TO USE (CONTENT) ==========
   let contentAdvice = [];
-  if (hasDefStack) contentAdvice.push("<strong>Long events (LVE, LGTE, Fighting Legend)</strong> — permanent DEF stacking makes them better every turn. Top pick for endurance fights.");
-  if (hasDefTempBoost && !hasDefStack) contentAdvice.push("<strong>Short/medium events</strong> — DEF boost is only for 1 turn so they don't improve over time. Better for quick fights.");
-  if (hasGuard || (hasDmgReduction && drPercents.some(d => d >= 30))) contentAdvice.push("<strong>Red Zone / Cell Max / Hard Dokkan Events</strong> — tanking lets them survive big attacks that would KO other units.");
-  if (hasGuardAndDR) contentAdvice.push("<strong>Tamagami / Hardest content</strong> — guard + DR combo makes this unit viable against even the hardest bosses in the game.");
+  if (hasDefStack) {
+    contentAdvice.push("<strong>Long events (LVE, LGTE, Fighting Legend)</strong> — permanent DEF stacking makes them better every turn. Top pick for endurance fights.");
+    if (!hasDmgReduction && !hasGuard) contentAdvice.push('<span style="color:#FF9800">⚠ Struggles vs DEF-ignore bosses</span> — Jiren Phase 2 ignores 100% DEF, some Red Zone bosses ignore 50-80%. Pure DEF stackers become paper in those fights. Need DR or guard partners to cover these phases.');
+  }
+  if (hasDefTempBoost && !hasDefStack) contentAdvice.push("<strong>Short/medium events only</strong> — DEF boost is for 1 turn and does NOT stack. In long events or multi-phase fights, this unit doesn't get any tankier. Against modern bosses supering for 1M+, a temporary DEF raise often isn't enough.");
+  if (hasGuard || (hasDmgReduction && drPercents.some(d => d >= 30))) {
+    contentAdvice.push("<strong>Red Zone / Cell Max</strong> — tanking lets them survive big attacks. But be aware: modern Red Zone supers hit for 800K-1.2M, and Cell Max AoE hits all 3 slots for 1M+. Even with guard/DR, positioning matters.");
+  }
+  if (hasGuardAndDR) {
+    contentAdvice.push("<strong>Tamagami / Supreme Magnificent Battle</strong> — guard + DR is the best defensive setup for the hardest content. But even this combo gets tested by Tamagami's multi-attack patterns (5-8 attacks per turn) and bomb orb mechanics.");
+  }
   if (hasEvade && maxEvade >= 30) {
     contentAdvice.push(`<strong>Any content where dodging matters</strong> — ${maxEvade}% evasion is strong everywhere. Especially good in SBR where dodging even one super can save a run.`);
     if (hasDodgeCancelVulnerability) contentAdvice.push('<span style="color:#FF9800">⚠ Avoid dodge-cancel stages</span> — some bosses (Jiren phase 1, certain Red Zones) cancel dodge entirely. This unit loses their main defense in those fights.');
