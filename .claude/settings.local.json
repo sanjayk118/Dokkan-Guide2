@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const d = require\\(''./dokkan-data.json''\\); console.log\\(''All keys:'', [...new Set\\(d.flatMap\\(u => Object.keys\\(u\\)\\)\\)].sort\\(\\).join\\('', ''\\)\\);\")"
+    ]
+  }
+}

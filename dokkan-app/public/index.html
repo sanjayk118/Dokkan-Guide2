@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dokkan Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <h1>DOKKAN GUIDE</h1>
+    <p class="subtitle">Global Unit Database</p>
+    <p class="unit-count" id="unitCount">Loading...</p>
+
+    <!-- List View -->
+    <div class="list-view" id="listView">
+      <input
+        class="search-input"
+        id="searchInput"
+        type="text"
+        placeholder="Search by name, type, or category..."
+      />
+      <div id="activeFilters" class="active-filters"></div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Type</div>
+        <div class="filter-row" id="typeFilters">
+          <button class="filter-btn" data-group="type" data-value="AGL">AGL</button>
+          <button class="filter-btn" data-group="type" data-value="TEQ">TEQ</button>
+          <button class="filter-btn" data-group="type" data-value="INT">INT</button>
+          <button class="filter-btn" data-group="type" data-value="STR">STR</button>
+          <button class="filter-btn" data-group="type" data-value="PHY">PHY</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Rarity &amp; Class</div>
+        <div class="filter-row" id="rarityClassFilters">
+          <button class="filter-btn" data-group="rarity" data-value="LR">LR</button>
+          <button class="filter-btn" data-group="rarity" data-value="UR">UR</button>
+          <button class="filter-btn" data-group="class" data-value="Super">Super</button>
+          <button class="filter-btn" data-group="class" data-value="Extreme">Extreme</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Category</div>
+        <select class="cat-select" id="categoryFilter">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div id="unitList"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- Detail View -->
+    <div class="detail-view" id="detailView">
+      <button class="back-btn" id="backBtn">&larr; Back to list</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

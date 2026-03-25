@@ -1,0 +1,16 @@
+{
+  "name": "dokkan-guide",
+  "version": "1.0.0",
+  "description": "Dokkan Battle Unit Guide — local web app",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "import": "node scripts/import-data.js && node scripts/import-reddit.js",
+    "scrape:wiki": "node scrapers/wiki.js",
+    "scrape:reddit": "node scrapers/reddit.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "sql.js": "^1.11.0"
+  }
+}
